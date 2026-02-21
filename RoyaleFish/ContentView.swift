@@ -3,10 +3,12 @@
 //  FrontendHackathon
 //
 //
-
 import SwiftUI
 import UIKit
 import Combine
+import FirebaseCore
+import FirebaseAuth
+import GoogleSignIn
 
 // MARK: - Models
 
@@ -312,6 +314,114 @@ final class ScreenCoachViewModel: ObservableObject {
     }
 }
 
+// MARK: - Auth
+
+@MainActor
+final class AuthManager: ObservableObject {
+    @Published private(set) var firebaseUser: FirebaseAuth.User?
+    @Published var lastErrorMessage: String?
+
+    private var handle: AuthStateDidChangeListenerHandle?
+
+    init() {
+        handle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            guard let self else { return }
+            Task { @MainActor in
+                self.firebaseUser = user
+            }
+        }
+    }
+
+    deinit {
+        if let handle { Auth.auth().removeStateDidChangeListener(handle) }
+    }
+
+    var isSignedIn: Bool { firebaseUser != nil }
+
+    var displayName: String {
+        let n = firebaseUser?.displayName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return n.isEmpty ? "Player" : n
+    }
+
+    var email: String {
+        let e = firebaseUser?.email?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return e.isEmpty ? "" : e
+    }
+
+    var photoURL: URL? { firebaseUser?.photoURL }
+
+    func signInWithGoogle() {
+        Task { @MainActor in
+            do {
+                self.lastErrorMessage = nil
+
+                guard let presentingVC = Self.topMostViewController() else {
+                    throw NSError(domain: "ScreenCoachAuth", code: 1, userInfo: [NSLocalizedDescriptionKey: "No presenting view controller."])
+                }
+
+                guard let clientID = FirebaseApp.app()?.options.clientID, !clientID.isEmpty else {
+                    throw NSError(domain: "ScreenCoachAuth", code: 2, userInfo: [NSLocalizedDescriptionKey: "Missing Firebase clientID."])
+                }
+
+                let config = GIDConfiguration(clientID: clientID)
+                GIDSignIn.sharedInstance.configuration = config
+
+                let result = try await GIDSignIn.sharedInstance.signIn(withPresenting: presentingVC)
+                let user = result.user
+
+                guard let idToken = user.idToken?.tokenString else {
+                    throw NSError(domain: "ScreenCoachAuth", code: 3, userInfo: [NSLocalizedDescriptionKey: "Missing Google ID token."])
+                }
+                let accessToken = user.accessToken.tokenString
+
+                let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
+                _ = try await Auth.auth().signIn(with: credential)
+            } catch {
+                self.lastErrorMessage = (error as NSError).localizedDescription
+            }
+        }
+    }
+
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+            GIDSignIn.sharedInstance.signOut()
+            lastErrorMessage = nil
+        } catch {
+            lastErrorMessage = (error as NSError).localizedDescription
+        }
+    }
+
+    private static func topMostViewController() -> UIViewController? {
+        let scenes = UIApplication.shared.connectedScenes
+        let windowScene = scenes
+            .compactMap { $0 as? UIWindowScene }
+            .first { $0.activationState == .foregroundActive }
+
+        let window = windowScene?.windows.first { $0.isKeyWindow } ?? windowScene?.windows.first
+        let root = window?.rootViewController
+        return topViewController(from: root)
+    }
+
+    private static func topViewController(from root: UIViewController?) -> UIViewController? {
+        if let nav = root as? UINavigationController {
+            return topViewController(from: nav.visibleViewController)
+        }
+        if let tab = root as? UITabBarController {
+            return topViewController(from: tab.selectedViewController)
+        }
+        if let presented = root?.presentedViewController {
+            return topViewController(from: presented)
+        }
+        return root
+    }
+}
+
+struct SettingsAlert: Identifiable {
+    let id = UUID()
+    let message: String
+}
+
 // MARK: - Tabs
 
 enum Tab: String, CaseIterable {
@@ -332,6 +442,7 @@ enum Tab: String, CaseIterable {
 
 struct ContentView: View {
     @StateObject private var vm = ScreenCoachViewModel()
+    @StateObject private var auth = AuthManager()
 
     var body: some View {
         ZStack {
@@ -341,11 +452,11 @@ struct ContentView: View {
                 ZStack {
                     switch vm.selectedTab {
                     case .dashboard:
-                        DashboardView().environmentObject(vm)
+                        DashboardView().environmentObject(vm).environmentObject(auth)
                     case .sessions:
-                        SessionsRootView().environmentObject(vm)
+                        SessionsRootView().environmentObject(vm).environmentObject(auth)
                     case .settings:
-                        SettingsView().environmentObject(vm)
+                        SettingsView().environmentObject(vm).environmentObject(auth)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -355,6 +466,9 @@ struct ContentView: View {
                     .padding(.bottom, 10)
                     .padding(.top, 10)
             }
+        }
+        .onOpenURL { url in
+            _ = GIDSignIn.sharedInstance.handle(url)
         }
         .preferredColorScheme(.dark)
         .fullScreenCover(item: $vm.selectedShot) { shot in
@@ -780,11 +894,16 @@ struct SessionDetailView: View {
 
 struct SettingsView: View {
     @EnvironmentObject private var vm: ScreenCoachViewModel
+    @EnvironmentObject private var auth: AuthManager
+
+    @State private var alertItem: SettingsAlert?
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 14) {
                 header
+
+                authSection
 
                 settingGroup(title: "Controls") {
                     ToggleRow(title: "Enable Coach Feed", icon: "sparkles", isOn: $vm.enableCoachFeed)
@@ -801,6 +920,130 @@ struct SettingsView: View {
             .padding(.bottom, 28)
         }
         .preferredColorScheme(.dark)
+    }
+
+    private var authSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Account")
+                .font(.system(size: 16, weight: .heavy, design: .rounded))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 4)
+
+            GlowCard(cornerRadius: 24, glow: Color.gold.opacity(0.14)) {
+                VStack(alignment: .leading, spacing: 12) {
+                    if auth.isSignedIn {
+                        signedInCard
+                    } else {
+                        signedOutCard
+                    }
+                }
+                .padding(18)
+            }
+        }
+        .onChange(of: auth.lastErrorMessage) { _, newValue in
+            if let msg = newValue, !msg.isEmpty {
+                alertItem = SettingsAlert(message: msg)
+            }
+        }
+        .alert(item: $alertItem) { item in
+            Alert(title: Text("Sign-In Error"), message: Text(item.message), dismissButton: .default(Text("OK")))
+        }
+    }
+
+    private var signedOutCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(Color.royalBlueBright.opacity(0.14))
+                        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Color.royalBlueBright.opacity(0.24), lineWidth: 1))
+                    Image(systemName: "person.crop.circle.badge.plus")
+                        .font(.system(size: 18, weight: .heavy))
+                        .foregroundStyle(Color.goldBright.opacity(0.95))
+                }
+                .frame(width: 44, height: 44)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Sign in")
+                        .font(.system(size: 18, weight: .heavy, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text("Sync your coach feed")
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.white.opacity(0.70))
+                }
+                Spacer()
+            }
+
+            PressableButton(
+                title: "Continue with Google",
+                leadingIcon: "g.circle",
+                style: .primary
+            ) {
+                auth.signInWithGoogle()
+            }
+        }
+    }
+
+    private var signedInCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .fill(Color.white.opacity(0.06))
+                        .overlay(RoundedRectangle(cornerRadius: 22, style: .continuous).stroke(Color.white.opacity(0.10), lineWidth: 1))
+
+                    if let url = auth.photoURL {
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .success(let image):
+                                image.resizable().scaledToFill()
+                            default:
+                                Image(systemName: "person.crop.circle.fill")
+                                    .font(.system(size: 26, weight: .bold))
+                                    .foregroundStyle(Color.white.opacity(0.70))
+                            }
+                        }
+                    } else {
+                        Image(systemName: "person.crop.circle.fill")
+                            .font(.system(size: 26, weight: .bold))
+                            .foregroundStyle(Color.white.opacity(0.70))
+                    }
+                }
+                .frame(width: 56, height: 56)
+                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                .shadow(color: Color.royalBlueBright.opacity(0.20), radius: 14, x: 0, y: 10)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(auth.displayName)
+                        .font(.system(size: 18, weight: .heavy, design: .rounded))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.9)
+                        .allowsTightening(true)
+
+                    if !auth.email.isEmpty {
+                        Text(auth.email)
+                            .font(.system(size: 13, weight: .semibold, design: .rounded))
+                            .foregroundStyle(Color.white.opacity(0.70))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.9)
+                            .allowsTightening(true)
+                    }
+                }
+
+                Spacer()
+
+                GradePill(grade: "PRO")
+            }
+
+            PressableButton(
+                title: "Sign Out",
+                leadingIcon: "rectangle.portrait.and.arrow.right",
+                style: .danger
+            ) {
+                auth.signOut()
+            }
+        }
     }
 
     private var header: some View {
