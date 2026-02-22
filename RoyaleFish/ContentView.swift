@@ -9,6 +9,7 @@ import Combine
 import FirebaseCore
 import FirebaseAuth
 import GoogleSignIn
+import ReplayKit
 
 // MARK: - Models
 
@@ -99,220 +100,7 @@ extension TimeInterval {
 
 // MARK: - ViewModel
 
-@MainActor
-final class ScreenCoachViewModel: ObservableObject {
-    enum RecordingState: Equatable {
-        case off
-        case on(startedAt: Date)
-
-        var isOn: Bool {
-            if case .on = self { return true }
-            return false
-        }
-    }
-
-    @Published var selectedTab: Tab = .dashboard
-
-    @Published var recordingState: RecordingState = .off
-    @Published var isAnalyzing: Bool = false
-
-    @Published var enableCoachFeed: Bool = true
-    @Published var enableHaptics: Bool = true
-    @Published var darkMode: Bool = true
-
-    @Published var sessions: [Session] = []
-
-    @Published var dashboardShots: [Shot] = []
-    @Published var coachFeed: [CoachEvent] = []
-    @Published var dashboardGrade: String = "B+"
-    @Published var dashboardSummary: String = "Slight overcommit after elixir dip."
-
-    @Published var selectedShot: Shot?
-
-    private var timer: Timer?
-    private var startDate: Date?
-    @Published var elapsed: TimeInterval = 0
-
-    private let feedTemplates: [(String, String)] = [
-        ("shield.fill", "Overcommitted on defense"),
-        ("hourglass", "Solid elixir patience"),
-        ("arrow.triangle.2.circlepath", "Missed cycle window"),
-        ("bolt.fill", "Fast punish was clean"),
-        ("crown.fill", "Good tower trade timing"),
-        ("exclamationmark.triangle.fill", "Risky push into low elixir")
-    ]
-
-    private let summaryTemplates: [(String, String)] = [
-        ("A-", "Clean tempo with smart pressure."),
-        ("B+", "Slight overcommit after elixir dip."),
-        ("B", "A few forced defenses lowered tempo."),
-        ("C+", "Too many reactive spends.")
-    ]
-
-    init() {
-        seedMockSessions()
-        seedDashboardFromLatest()
-    }
-
-    func startRecording() {
-        guard !recordingState.isOn else { return }
-        let now = Date()
-        startDate = now
-        recordingState = .on(startedAt: now)
-        isAnalyzing = true
-        elapsed = 0
-        coachFeed = []
-        dashboardShots = []
-        dashboardGrade = "—"
-        dashboardSummary = "Recording live."
-        startTimer()
-        haptic(.soft)
-    }
-
-    func stopRecording() {
-        guard recordingState.isOn else { return }
-        let duration = elapsed
-        startDate = nil
-        recordingState = .off
-        isAnalyzing = false
-        stopTimer()
-        haptic(.medium)
-
-        let gradePick = summaryTemplates.randomElement() ?? ("B+", "Slight overcommit after elixir dip.")
-        let hero = dashboardShots.first ?? Shot(timestamp: 42, style: .arenaBlue)
-        let shots = dashboardShots.isEmpty ? [hero] : dashboardShots
-        let events = coachFeed.isEmpty ? [CoachEvent(timestamp: 42, icon: "shield.fill", text: "Solid defense timing")] : coachFeed
-
-        let focus = Int.random(in: 68...94)
-        let record = ["3–1", "2–2", "4–0", "1–3"].randomElement() ?? "2–2"
-
-        let new = Session(
-            date: Date(),
-            duration: duration,
-            grade: gradePick.0,
-            summary: gradePick.1,
-            heroShot: hero,
-            highlights: Array(shots.prefix(8)),
-            events: Array(events.prefix(10)),
-            focusScore: focus,
-            record: record
-        )
-        sessions.insert(new, at: 0)
-        seedDashboardFromLatest()
-    }
-
-    func simulateNewScreenshot() {
-        let t = max(8, Int(elapsed == 0 ? TimeInterval.random(in: 12...160) : elapsed))
-        let style = Shot.ShotStyle.allCases.randomElement() ?? .arenaBlue
-        let shot = Shot(timestamp: TimeInterval(t), style: style)
-        dashboardShots.insert(shot, at: 0)
-
-        if dashboardShots.count > 6 { dashboardShots = Array(dashboardShots.prefix(6)) }
-
-        if dashboardGrade == "—" {
-            let pick = summaryTemplates.randomElement() ?? ("B+", "Slight overcommit after elixir dip.")
-            dashboardGrade = pick.0
-            dashboardSummary = pick.1
-        }
-
-        isAnalyzing = recordingState.isOn || !dashboardShots.isEmpty
-        haptic(.light)
-    }
-
-    func simulateAIUpdate() {
-        guard enableCoachFeed else { return }
-        let t = max(6, Int(elapsed == 0 ? TimeInterval.random(in: 20...170) : elapsed))
-        let pick = feedTemplates.randomElement() ?? ("sparkles", "Good pacing")
-        let ev = CoachEvent(timestamp: TimeInterval(t), icon: pick.0, text: pick.1)
-        coachFeed.insert(ev, at: 0)
-        if coachFeed.count > 8 { coachFeed = Array(coachFeed.prefix(8)) }
-        isAnalyzing = true
-        haptic(.light)
-    }
-
-    func openShot(_ shot: Shot) {
-        selectedShot = shot
-        haptic(.soft)
-    }
-
-    private func seedDashboardFromLatest() {
-        if let latest = sessions.first {
-            dashboardShots = Array(latest.highlights.prefix(6))
-            dashboardGrade = latest.grade
-            dashboardSummary = latest.summary
-            coachFeed = Array(latest.events.prefix(6))
-        } else {
-            dashboardShots = [
-                Shot(timestamp: 42, style: .arenaBlue),
-                Shot(timestamp: 70, style: .arenaGold),
-                Shot(timestamp: 95, style: .arenaCyan)
-            ]
-            coachFeed = [
-                CoachEvent(timestamp: 42, icon: "shield.fill", text: "Overcommitted on defense"),
-                CoachEvent(timestamp: 70, icon: "hourglass", text: "Solid elixir patience"),
-                CoachEvent(timestamp: 95, icon: "arrow.triangle.2.circlepath", text: "Missed cycle window")
-            ]
-            dashboardGrade = "B+"
-            dashboardSummary = "Slight overcommit after elixir dip."
-        }
-        isAnalyzing = recordingState.isOn
-    }
-
-    private func startTimer() {
-        stopTimer()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
-            guard let self else { return }
-            Task { @MainActor in
-                guard let start = self.startDate else {
-                    self.elapsed = 0
-                    return
-                }
-                self.elapsed = Date().timeIntervalSince(start)
-            }
-        }
-    }
-
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
-    }
-
-    private func haptic(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
-        guard enableHaptics else { return }
-        let gen = UIImpactFeedbackGenerator(style: style)
-        gen.prepare()
-        gen.impactOccurred()
-    }
-
-    private func seedMockSessions() {
-        let now = Date()
-        let cal = Calendar.current
-
-        func makeSession(daysAgo: Int, duration: TimeInterval, grade: String, summary: String, style: Shot.ShotStyle, focus: Int, record: String) -> Session {
-            let d = cal.date(byAdding: .day, value: -daysAgo, to: now) ?? now
-            let hero = Shot(timestamp: 42, style: style)
-            let shots: [Shot] = [
-                Shot(timestamp: 42, style: style),
-                Shot(timestamp: 70, style: .arenaGold),
-                Shot(timestamp: 96, style: .arenaCyan),
-                Shot(timestamp: 118, style: .arenaBlue)
-            ]
-            let evs: [CoachEvent] = [
-                CoachEvent(timestamp: 42, icon: "shield.fill", text: "Overcommitted on defense"),
-                CoachEvent(timestamp: 70, icon: "hourglass", text: "Solid elixir patience"),
-                CoachEvent(timestamp: 96, icon: "arrow.triangle.2.circlepath", text: "Missed cycle window"),
-                CoachEvent(timestamp: 118, icon: "bolt.fill", text: "Fast punish was clean")
-            ]
-            return Session(date: d, duration: duration, grade: grade, summary: summary, heroShot: hero, highlights: shots, events: evs, focusScore: focus, record: record)
-        }
-
-        sessions = [
-            makeSession(daysAgo: 0, duration: 18*60 + 42, grade: "B+", summary: "Slight overcommit after elixir dip.", style: .arenaBlue, focus: 82, record: "3–1"),
-            makeSession(daysAgo: 2, duration: 14*60 + 05, grade: "A-", summary: "Clean tempo with smart pressure.", style: .arenaGold, focus: 91, record: "4–0"),
-            makeSession(daysAgo: 5, duration: 22*60 + 16, grade: "B", summary: "A few forced defenses lowered tempo.", style: .arenaCyan, focus: 78, record: "2–2")
-        ]
-    }
-}
+// MARK: - ViewModel
 
 // MARK: - Auth
 
@@ -618,13 +406,33 @@ struct DashboardView: View {
 
     private var actionButton: some View {
         let isOn = vm.recordingState.isOn
-        return PressableButton(
-            title: isOn ? "Stop Recording" : "Start Recording",
-            leadingIcon: isOn ? "stop.fill" : "record.circle",
-            style: isOn ? .danger : .primary
-        ) {
-            if isOn { vm.stopRecording() } else { vm.startRecording() }
+
+        if isOn {
+            return AnyView(
+                PressableButton(
+                    title: "Stop Recording",
+                    leadingIcon: "stop.fill",
+                    style: .danger
+                ) { vm.stopRecording() }
+            )
         }
+
+        return AnyView(
+            PressableButton(
+                title: "Start Recording",
+                leadingIcon: "record.circle",
+                style: .primary
+            ) {
+                print("button pressed")
+                ReplayKitBroadcastManager.startBroadcast(preferredExtensionBundleID: "com.RoyaleFish.app.RoyaleFishBroadcast") { error in
+                    if let error {
+                        print("ReplayKit startBroadcast error: \(error)")
+                        return
+                    }
+                    vm.startRecording()
+                }
+            }
+        )
     }
 
     private var latestHighlightsCard: some View {
@@ -692,11 +500,6 @@ struct DashboardView: View {
                 }
                 .padding(.top, 2)
 
-                HStack(spacing: 10) {
-                    SmallPillButton(title: "New Screenshot", icon: "camera.fill") { vm.simulateNewScreenshot() }
-                    SmallPillButton(title: "AI Update", icon: "sparkles") { vm.simulateAIUpdate() }
-                }
-                .padding(.top, 4)
             }
             .padding(18)
         }
@@ -1842,6 +1645,98 @@ extension Color {
 
     static let redHot = Color(red: 255/255, green: 68/255, blue: 92/255)
     static let redHotDeep = Color(red: 220/255, green: 36/255, blue: 72/255)
+}
+
+// MARK: - Broadcast Picker
+
+// MARK: - ReplayKit Broadcast Starter (Supported)
+
+@MainActor
+enum ReplayKitBroadcastManager {
+    private final class Delegate: NSObject, RPBroadcastActivityViewControllerDelegate {
+        let completion: (RPBroadcastController?, Error?) -> Void
+        init(completion: @escaping (RPBroadcastController?, Error?) -> Void) {
+            self.completion = completion
+        }
+
+        func broadcastActivityViewController(
+            _ broadcastActivityViewController: RPBroadcastActivityViewController,
+            didFinishWith broadcastController: RPBroadcastController?,
+            error: Error?
+        ) {
+            broadcastActivityViewController.dismiss(animated: true) {
+                self.completion(broadcastController, error)
+            }
+        }
+    }
+
+    // Retain delegate until flow completes.
+    private static var retainedDelegate: Delegate?
+
+    static func startBroadcast(preferredExtensionBundleID: String, completion: @escaping (Error?) -> Void) {
+        RPBroadcastActivityViewController.load(withPreferredExtension: preferredExtensionBundleID) { activityVC, error in
+            if let error {
+                completion(error)
+                return
+            }
+            guard let activityVC else {
+                completion(NSError(domain: "ReplayKit", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to load broadcast activity view controller"]))
+                return
+            }
+
+            guard let presenter = UIApplication.shared.topMostViewController() else {
+                completion(NSError(domain: "ReplayKit", code: -2, userInfo: [NSLocalizedDescriptionKey: "No presenting view controller"]))
+                return
+            }
+
+            let delegate = Delegate { controller, delegateError in
+                retainedDelegate = nil
+
+                if let delegateError {
+                    completion(delegateError)
+                    return
+                }
+                guard let controller else {
+                    completion(NSError(domain: "ReplayKit", code: -3, userInfo: [NSLocalizedDescriptionKey: "No broadcast controller returned"]))
+                    return
+                }
+
+                controller.startBroadcast { startError in
+                    completion(startError)
+                }
+            }
+
+            retainedDelegate = delegate
+            activityVC.delegate = delegate
+            presenter.present(activityVC, animated: true)
+        }
+    }
+}
+
+private extension UIApplication {
+    func topMostViewController() -> UIViewController? {
+        let scenes = connectedScenes
+        let windowScene = scenes
+            .compactMap { $0 as? UIWindowScene }
+            .first { $0.activationState == .foregroundActive }
+
+        let window = windowScene?.windows.first { $0.isKeyWindow } ?? windowScene?.windows.first
+        let root = window?.rootViewController
+        return UIApplication.topViewController(from: root)
+    }
+
+    static func topViewController(from root: UIViewController?) -> UIViewController? {
+        if let nav = root as? UINavigationController {
+            return topViewController(from: nav.visibleViewController)
+        }
+        if let tab = root as? UITabBarController {
+            return topViewController(from: tab.selectedViewController)
+        }
+        if let presented = root?.presentedViewController {
+            return topViewController(from: presented)
+        }
+        return root
+    }
 }
 
 // MARK: - Preview

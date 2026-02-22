@@ -9,6 +9,13 @@
 /* Begin PBXBuildFile section */
 		B7FB7C0F2F4A18D700CB29B6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B7FB7C0E2F4A18D700CB29B6 /* FirebaseAnalytics */; };
 		B7FB7C112F4A18D700CB29B6 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B7FB7C102F4A18D700CB29B6 /* FirebaseStorage */; };
+		B7FB7C1C2F4A397400CB29B6 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = B7FB7C1B2F4A397400CB29B6 /* GoogleSignIn */; };
+		B7FB7C232F4A44B600CB29B6 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B7FB7C222F4A44B600CB29B6 /* FirebaseAuth */; };
+		B7FB7C362F4A737B00CB29B6 /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7FB7C352F4A737B00CB29B6 /* ReplayKit.framework */; };
+		B7FB7C402F4A737B00CB29B6 /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7FB7C352F4A737B00CB29B6 /* ReplayKit.framework */; };
+		B7FB7C422F4A737B00CB29B6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7FB7C412F4A737B00CB29B6 /* UIKit.framework */; };
+		B7FB7C492F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B7FB7C3F2F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B7FB7C4C2F4A737B00CB29B6 /* RoyaleFishBroadcast.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B7FB7C342F4A737B00CB29B6 /* RoyaleFishBroadcast.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,17 +33,77 @@
 			remoteGlobalIDString = B7FB7BE02F4A107800CB29B6;
 			remoteInfo = RoyaleFish;
 		};
+		B7FB7C472F4A737B00CB29B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B7FB7BD92F4A107800CB29B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B7FB7C3E2F4A737B00CB29B6;
+			remoteInfo = RoyaleFishBroadcastSetupUI;
+		};
+		B7FB7C4A2F4A737B00CB29B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B7FB7BD92F4A107800CB29B6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B7FB7C332F4A737B00CB29B6;
+			remoteInfo = RoyaleFishBroadcast;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B7FB7C552F4A737B00CB29B6 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B7FB7C4C2F4A737B00CB29B6 /* RoyaleFishBroadcast.appex in Embed Foundation Extensions */,
+				B7FB7C492F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		B7FB7BE12F4A107800CB29B6 /* RoyaleFish.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RoyaleFish.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7FB7BEE2F4A107900CB29B6 /* RoyaleFishTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoyaleFishTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7FB7BF82F4A107900CB29B6 /* RoyaleFishUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RoyaleFishUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7FB7C342F4A737B00CB29B6 /* RoyaleFishBroadcast.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RoyaleFishBroadcast.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7FB7C352F4A737B00CB29B6 /* ReplayKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReplayKit.framework; path = System/Library/Frameworks/ReplayKit.framework; sourceTree = SDKROOT; };
+		B7FB7C3F2F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = RoyaleFishBroadcastSetupUI.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7FB7C412F4A737B00CB29B6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B7FB7C192F4A38DB00CB29B6 /* Exceptions for "RoyaleFish" folder in "RoyaleFish" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B7FB7BE02F4A107800CB29B6 /* RoyaleFish */;
+		};
+		B7FB7C502F4A737B00CB29B6 /* Exceptions for "RoyaleFishBroadcastSetupUI" folder in "RoyaleFishBroadcastSetupUI" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B7FB7C3E2F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI */;
+		};
+		B7FB7C542F4A737B00CB29B6 /* Exceptions for "RoyaleFishBroadcast" folder in "RoyaleFishBroadcast" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B7FB7C332F4A737B00CB29B6 /* RoyaleFishBroadcast */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B7FB7BE32F4A107800CB29B6 /* RoyaleFish */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B7FB7C192F4A38DB00CB29B6 /* Exceptions for "RoyaleFish" folder in "RoyaleFish" target */,
+			);
 			path = RoyaleFish;
 			sourceTree = "<group>";
 		};
@@ -50,6 +117,22 @@
 			path = RoyaleFishUITests;
 			sourceTree = "<group>";
 		};
+		B7FB7C372F4A737B00CB29B6 /* RoyaleFishBroadcast */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B7FB7C542F4A737B00CB29B6 /* Exceptions for "RoyaleFishBroadcast" folder in "RoyaleFishBroadcast" target */,
+			);
+			path = RoyaleFishBroadcast;
+			sourceTree = "<group>";
+		};
+		B7FB7C432F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B7FB7C502F4A737B00CB29B6 /* Exceptions for "RoyaleFishBroadcastSetupUI" folder in "RoyaleFishBroadcastSetupUI" target */,
+			);
+			path = RoyaleFishBroadcastSetupUI;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +142,8 @@
 			files = (
 				B7FB7C0F2F4A18D700CB29B6 /* FirebaseAnalytics in Frameworks */,
 				B7FB7C112F4A18D700CB29B6 /* FirebaseStorage in Frameworks */,
+				B7FB7C1C2F4A397400CB29B6 /* GoogleSignIn in Frameworks */,
+				B7FB7C232F4A44B600CB29B6 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,6 +161,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B7FB7C312F4A737B00CB29B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B7FB7C362F4A737B00CB29B6 /* ReplayKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7FB7C3C2F4A737B00CB29B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B7FB7C402F4A737B00CB29B6 /* ReplayKit.framework in Frameworks */,
+				B7FB7C422F4A737B00CB29B6 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -85,6 +187,9 @@
 				B7FB7BE32F4A107800CB29B6 /* RoyaleFish */,
 				B7FB7BF12F4A107900CB29B6 /* RoyaleFishTests */,
 				B7FB7BFB2F4A107900CB29B6 /* RoyaleFishUITests */,
+				B7FB7C372F4A737B00CB29B6 /* RoyaleFishBroadcast */,
+				B7FB7C432F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI */,
+				B7FB7C212F4A44B600CB29B6 /* Frameworks */,
 				B7FB7BE22F4A107800CB29B6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -95,8 +200,19 @@
 				B7FB7BE12F4A107800CB29B6 /* RoyaleFish.app */,
 				B7FB7BEE2F4A107900CB29B6 /* RoyaleFishTests.xctest */,
 				B7FB7BF82F4A107900CB29B6 /* RoyaleFishUITests.xctest */,
+				B7FB7C342F4A737B00CB29B6 /* RoyaleFishBroadcast.appex */,
+				B7FB7C3F2F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B7FB7C212F4A44B600CB29B6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B7FB7C352F4A737B00CB29B6 /* ReplayKit.framework */,
+				B7FB7C412F4A737B00CB29B6 /* UIKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -109,10 +225,13 @@
 				B7FB7BDD2F4A107800CB29B6 /* Sources */,
 				B7FB7BDE2F4A107800CB29B6 /* Frameworks */,
 				B7FB7BDF2F4A107800CB29B6 /* Resources */,
+				B7FB7C552F4A737B00CB29B6 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B7FB7C482F4A737B00CB29B6 /* PBXTargetDependency */,
+				B7FB7C4B2F4A737B00CB29B6 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				B7FB7BE32F4A107800CB29B6 /* RoyaleFish */,
@@ -121,6 +240,8 @@
 			packageProductDependencies = (
 				B7FB7C0E2F4A18D700CB29B6 /* FirebaseAnalytics */,
 				B7FB7C102F4A18D700CB29B6 /* FirebaseStorage */,
+				B7FB7C1B2F4A397400CB29B6 /* GoogleSignIn */,
+				B7FB7C222F4A44B600CB29B6 /* FirebaseAuth */,
 			);
 			productName = RoyaleFish;
 			productReference = B7FB7BE12F4A107800CB29B6 /* RoyaleFish.app */;
@@ -172,6 +293,50 @@
 			productReference = B7FB7BF82F4A107900CB29B6 /* RoyaleFishUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		B7FB7C332F4A737B00CB29B6 /* RoyaleFishBroadcast */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B7FB7C512F4A737B00CB29B6 /* Build configuration list for PBXNativeTarget "RoyaleFishBroadcast" */;
+			buildPhases = (
+				B7FB7C302F4A737B00CB29B6 /* Sources */,
+				B7FB7C312F4A737B00CB29B6 /* Frameworks */,
+				B7FB7C322F4A737B00CB29B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B7FB7C372F4A737B00CB29B6 /* RoyaleFishBroadcast */,
+			);
+			name = RoyaleFishBroadcast;
+			packageProductDependencies = (
+			);
+			productName = RoyaleFishBroadcast;
+			productReference = B7FB7C342F4A737B00CB29B6 /* RoyaleFishBroadcast.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		B7FB7C3E2F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B7FB7C4D2F4A737B00CB29B6 /* Build configuration list for PBXNativeTarget "RoyaleFishBroadcastSetupUI" */;
+			buildPhases = (
+				B7FB7C3B2F4A737B00CB29B6 /* Sources */,
+				B7FB7C3C2F4A737B00CB29B6 /* Frameworks */,
+				B7FB7C3D2F4A737B00CB29B6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B7FB7C432F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI */,
+			);
+			name = RoyaleFishBroadcastSetupUI;
+			packageProductDependencies = (
+			);
+			productName = RoyaleFishBroadcastSetupUI;
+			productReference = B7FB7C3F2F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -193,6 +358,12 @@
 						CreatedOnToolsVersion = 26.2;
 						TestTargetID = B7FB7BE02F4A107800CB29B6;
 					};
+					B7FB7C332F4A737B00CB29B6 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					B7FB7C3E2F4A737B00CB29B6 = {
+						CreatedOnToolsVersion = 26.2;
+					};
 				};
 			};
 			buildConfigurationList = B7FB7BDC2F4A107800CB29B6 /* Build configuration list for PBXProject "RoyaleFish" */;
@@ -206,6 +377,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				B7FB7C0D2F4A18D700CB29B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B7FB7C1A2F4A397400CB29B6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B7FB7BE22F4A107800CB29B6 /* Products */;
@@ -215,6 +387,8 @@
 				B7FB7BE02F4A107800CB29B6 /* RoyaleFish */,
 				B7FB7BED2F4A107900CB29B6 /* RoyaleFishTests */,
 				B7FB7BF72F4A107900CB29B6 /* RoyaleFishUITests */,
+				B7FB7C332F4A737B00CB29B6 /* RoyaleFishBroadcast */,
+				B7FB7C3E2F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI */,
 			);
 		};
 /* End PBXProject section */
@@ -235,6 +409,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B7FB7BF62F4A107900CB29B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7FB7C322F4A737B00CB29B6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7FB7C3D2F4A737B00CB29B6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -265,6 +453,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B7FB7C302F4A737B00CB29B6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7FB7C3B2F4A737B00CB29B6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -277,6 +479,16 @@
 			isa = PBXTargetDependency;
 			target = B7FB7BE02F4A107800CB29B6 /* RoyaleFish */;
 			targetProxy = B7FB7BF92F4A107900CB29B6 /* PBXContainerItemProxy */;
+		};
+		B7FB7C482F4A737B00CB29B6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B7FB7C3E2F4A737B00CB29B6 /* RoyaleFishBroadcastSetupUI */;
+			targetProxy = B7FB7C472F4A737B00CB29B6 /* PBXContainerItemProxy */;
+		};
+		B7FB7C4B2F4A737B00CB29B6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B7FB7C332F4A737B00CB29B6 /* RoyaleFishBroadcast */;
+			targetProxy = B7FB7C4A2F4A737B00CB29B6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -405,11 +617,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = RoyaleFish/RoyaleFish.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 443MWG5GG2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RoyaleFish/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RoyaleFIsh;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -438,11 +652,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = RoyaleFish/RoyaleFish.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 443MWG5GG2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RoyaleFish/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RoyaleFIsh;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -472,6 +688,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 443MWG5GG2;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
 				MARKETING_VERSION = 1.0;
@@ -493,6 +710,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 443MWG5GG2;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
 				MARKETING_VERSION = 1.0;
@@ -513,6 +731,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 443MWG5GG2;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "N-A.RoyaleFishUITests";
@@ -532,6 +751,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 443MWG5GG2;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "N-A.RoyaleFishUITests";
@@ -543,6 +763,120 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = RoyaleFish;
+			};
+			name = Release;
+		};
+		B7FB7C4E2F4A737B00CB29B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 443MWG5GG2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RoyaleFishBroadcastSetupUI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RoyaleFishBroadcastSetupUI;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RoyaleFish.app.RoyaleFishBroadcastSetupUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B7FB7C4F2F4A737B00CB29B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 443MWG5GG2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RoyaleFishBroadcastSetupUI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RoyaleFishBroadcastSetupUI;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RoyaleFish.app.RoyaleFishBroadcastSetupUI;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B7FB7C522F4A737B00CB29B6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = RoyaleFishBroadcast/RoyaleFishBroadcast.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 443MWG5GG2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RoyaleFishBroadcast/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RoyaleFishBroadcast;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RoyaleFish.app.RoyaleFishBroadcast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B7FB7C532F4A737B00CB29B6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = RoyaleFishBroadcast/RoyaleFishBroadcast.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 443MWG5GG2;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RoyaleFishBroadcast/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = RoyaleFishBroadcast;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.RoyaleFish.app.RoyaleFishBroadcast;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -585,6 +919,24 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		B7FB7C4D2F4A737B00CB29B6 /* Build configuration list for PBXNativeTarget "RoyaleFishBroadcastSetupUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B7FB7C4E2F4A737B00CB29B6 /* Debug */,
+				B7FB7C4F2F4A737B00CB29B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B7FB7C512F4A737B00CB29B6 /* Build configuration list for PBXNativeTarget "RoyaleFishBroadcast" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B7FB7C522F4A737B00CB29B6 /* Debug */,
+				B7FB7C532F4A737B00CB29B6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -594,6 +946,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 12.9.0;
+			};
+		};
+		B7FB7C1A2F4A397400CB29B6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -608,6 +968,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = B7FB7C0D2F4A18D700CB29B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
+		};
+		B7FB7C1B2F4A397400CB29B6 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B7FB7C1A2F4A397400CB29B6 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		B7FB7C222F4A44B600CB29B6 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B7FB7C0D2F4A18D700CB29B6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
